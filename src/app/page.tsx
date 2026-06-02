@@ -208,6 +208,21 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Stats overlay */}
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+                {[
+                  { icon: CalendarDays, value: stats.eventsCount, label: t.home_live_events },
+                  { icon: Users, value: stats.usersCount, label: t.home_members },
+                  { icon: TrendingUp, value: stats.registrationsCount, label: t.home_registrations },
+                ].map(({ icon: Icon, value, label }) => (
+                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', border: '1px solid #F3F4F6', borderRadius: 999, padding: '4px 12px' }}>
+                    <Icon style={{ width: 12, height: 12, color: '#FFD84D', flexShrink: 0 }} />
+                    <span style={{ fontWeight: 700, color: '#111827', fontSize: 11 }}>{value.toLocaleString()}</span>
+                    <span style={{ fontSize: 11, color: '#6B7280' }}>{label}</span>
+                  </div>
+                ))}
+              </div>
+
             </div>
           )}
 
@@ -239,21 +254,6 @@ export default function HomePage() {
             </form>
           </div>
 
-          {/* Stats */}
-          <div className="hidden sm:flex gap-2 flex-wrap justify-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-            {[
-              { icon: CalendarDays, value: stats.eventsCount,       label: t.home_live_events },
-              { icon: Users,        value: stats.usersCount,         label: t.home_members },
-              { icon: TrendingUp,   value: stats.registrationsCount, label: t.home_registrations },
-            ].map(({ icon: Icon, value, label }) => (
-              <div key={label} className="flex items-center gap-1.5 rounded-full bg-white border border-[#F3F4F6] px-4 py-2 shadow-sm">
-                <Icon className="h-3.5 w-3.5 text-[#FFD84D] flex-shrink-0" />
-                <span className="font-bold text-[#111827] text-xs">{value.toLocaleString()}</span>
-                <span className="text-xs text-[#6B7280] hidden sm:inline">{label}</span>
-              </div>
-            ))}
-          </div>
-
           {/* CTA button */}
           <div className="flex justify-center animate-fade-in-up" style={{ animationDelay: '0.75s' }}>
             <a href="#events-section"
@@ -266,12 +266,12 @@ export default function HomePage() {
           </div>
 
           {/* Value cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
 
             {/* Organizers */}
             <div
               className="cursor-default"
-              style={{ background: 'white', border: '1px solid #F3F4F6', borderRadius: 20, padding: 24, transition: 'all 300ms ease', display: 'flex', flexDirection: 'column' }}
+              style={{ background: 'white', border: '1px solid #F3F4F6', borderRadius: 20, padding: 'clamp(12px, 2vw, 24px)', transition: 'all 300ms ease', display: 'flex', flexDirection: 'column' }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#FFD84D'; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#F3F4F6'; el.style.transform = ''; el.style.boxShadow = ''; }}
             >
@@ -288,7 +288,7 @@ export default function HomePage() {
             {/* Speakers */}
             <div
               className="cursor-default"
-              style={{ background: 'white', border: '1px solid #F3F4F6', borderRadius: 20, padding: 24, transition: 'all 300ms ease', display: 'flex', flexDirection: 'column' }}
+              style={{ background: 'white', border: '1px solid #F3F4F6', borderRadius: 20, padding: 'clamp(12px, 2vw, 24px)', transition: 'all 300ms ease', display: 'flex', flexDirection: 'column' }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#FFD84D'; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#F3F4F6'; el.style.transform = ''; el.style.boxShadow = ''; }}
             >
@@ -305,7 +305,7 @@ export default function HomePage() {
             {/* Participants */}
             <div
               className="cursor-default"
-              style={{ background: 'white', border: '1px solid #F3F4F6', borderRadius: 20, padding: 24, transition: 'all 300ms ease', display: 'flex', flexDirection: 'column' }}
+              style={{ background: 'white', border: '1px solid #F3F4F6', borderRadius: 20, padding: 'clamp(12px, 2vw, 24px)', transition: 'all 300ms ease', display: 'flex', flexDirection: 'column' }}
               onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#FFD84D'; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
               onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#F3F4F6'; el.style.transform = ''; el.style.boxShadow = ''; }}
             >
