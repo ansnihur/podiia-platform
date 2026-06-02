@@ -11,7 +11,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType>({
   locale: 'uk',
-  t: translations.uk,
+  t: translations.uk as T,
   setLocale: () => {},
 });
 
@@ -32,7 +32,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ locale, t: translations[locale], setLocale }}>
+    <LanguageContext.Provider value={{ locale, t: translations[locale] as T, setLocale }}>
       {children}
     </LanguageContext.Provider>
   );
