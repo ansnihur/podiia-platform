@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { formatShortDate } from '@/lib/utils';
 import { getT, getLocale } from '@/lib/get-translations';
 import Link from 'next/link';
-import { ArrowLeft, Users, Star, MessageSquare, BarChart2, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Users, Star, MessageSquare, BarChart2, CheckCircle, XCircle, Award, Zap, Target } from 'lucide-react';
 import { getAvatarColor } from '@/lib/avatar-color';
 import type { Metadata } from 'next';
 
@@ -52,14 +52,35 @@ export default async function AnalyticsPage({ params }: { params: { id: string }
   const confirmed = event.registrations.filter((r) => r.status === 'CONFIRMED').length;
   const cancelled = event.registrations.filter((r) => r.status === 'CANCELLED').length;
   const fillPct   = event.capacity > 0 ? Math.round((total / event.capacity) * 100) : 0;
-  const avgRating = event.feedbacks.length > 0
-    ? event.feedbacks.reduce((sum, f) => sum + f.rating, 0) / event.feedbacks.length
+  const feedbackCount = event.feedbacks.length;
+  const avgRating = feedbackCount > 0
+    ? event.feedbacks.reduce((sum, f) => sum + f.rating, 0) / feedbackCount
     : null;
+
+  // D: cancellation rate = (cancelled / total) × 100
+  const cancellationRate = total > 0 ? Math.round((cancelled / total) * 100) : null;
+
+  // W: weighted rating = R × (n / (n + 5))
+  const weightedRating = avgRating !== null
+    ? avgRating * (feedbackCount / (feedbackCount + 5))
+    : null;
+
+  // A: registration activity = confirmed / Δt (days from first reg to event date)
+  const firstReg = event.registrations.length > 0
+    ? event.registrations[event.registrations.length - 1]  // oldest: array is sorted desc
+    : null;
+  const deltaDays = firstReg
+    ? Math.max(1, Math.round(Math.abs(event.date.getTime() - firstReg.createdAt.getTime()) / 86_400_000))
+    : null;
+  const activityIndex = deltaDays !== null ? confirmed / deltaDays : null;
+
+  // P: feedback coverage = (feedbacks / confirmed) × 100
+  const feedbackCoverage = confirmed > 0 ? Math.round((feedbackCount / confirmed) * 100) : null;
 
   const statCards = [
     { label: t.analytics_registered, value: total,                sub: `${t.analytics_of_spots} ${event.capacity}`,    icon: Users         },
     { label: t.analytics_confirmed,  value: confirmed,            sub: `${t.analytics_cancelled}: ${cancelled}`,        icon: CheckCircle   },
-    { label: t.analytics_reviews,    value: event.feedbacks.length, sub: t.analytics_left_review,                       icon: MessageSquare },
+    { label: t.analytics_reviews,    value: feedbackCount,          sub: t.analytics_left_review,                       icon: MessageSquare },
     { label: t.analytics_rating,
       value: avgRating !== null ? avgRating.toFixed(1) : '—',
       sub:   avgRating !== null ? t.analytics_avg_rating : t.analytics_no_ratings,
@@ -98,6 +119,76 @@ export default async function AnalyticsPage({ params }: { params: { id: string }
               <p className="text-xs text-[#6B7280] mt-0.5">{sub}</p>
             </div>
           ))}
+        </div>
+
+        {/* Advanced metrics */}
+        <div>
+          <h2 className="font-display text-base font-semibold text-[#111827] mb-3">{t.analytics_advanced_metrics}</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* D: Cancellation rate */}
+            <div className="ua-card-white p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-medium text-[#6B7280]">{t.analytics_cancellation_rate}</p>
+                <div className="h-8 w-8 rounded-lg bg-[#FEF2F2] flex items-center justify-center">
+                  <XCircle className="h-4 w-4 text-[#EF4444]" />
+                </div>
+              </div>
+              <p className="font-display text-3xl font-bold text-[#111827]">
+                {cancellationRate !== null ? `${cancellationRate}%` : '—'}
+              </p>
+              <p className="text-xs text-[#6B7280] mt-0.5">{cancelled} / {total}</p>
+              <p className="text-xs text-[#9CA3AF] mt-1.5 leading-relaxed">{t.analytics_cancellation_rate_desc}</p>
+            </div>
+
+            {/* W: Weighted rating */}
+            <div className="ua-card-white p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-medium text-[#6B7280]">{t.analytics_weighted_rating}</p>
+                <div className="h-8 w-8 rounded-lg bg-[#FFFDE7] flex items-center justify-center">
+                  <Award className="h-4 w-4 text-[#FFD84D]" />
+                </div>
+              </div>
+              <p className="font-display text-3xl font-bold text-[#111827]">
+                {weightedRating !== null ? weightedRating.toFixed(1) : '—'}
+              </p>
+              <p className="text-xs text-[#6B7280] mt-0.5">
+                {avgRating !== null ? `${t.analytics_avg_rating}: ${avgRating.toFixed(1)}` : t.analytics_no_ratings}
+              </p>
+              <p className="text-xs text-[#9CA3AF] mt-1.5 leading-relaxed">{t.analytics_weighted_rating_desc}</p>
+            </div>
+
+            {/* A: Registration activity */}
+            <div className="ua-card-white p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-medium text-[#6B7280]">{t.analytics_activity_index}</p>
+                <div className="h-8 w-8 rounded-lg bg-[#F0FDF4] flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-[#16A34A]" />
+                </div>
+              </div>
+              <p className="font-display text-3xl font-bold text-[#111827]">
+                {activityIndex !== null ? activityIndex.toFixed(1) : '—'}
+              </p>
+              <p className="text-xs text-[#6B7280] mt-0.5">
+                {activityIndex !== null ? t.analytics_regs_per_day : '—'}
+              </p>
+              <p className="text-xs text-[#9CA3AF] mt-1.5 leading-relaxed">{t.analytics_activity_index_desc}</p>
+            </div>
+
+            {/* P: Feedback coverage */}
+            <div className="ua-card-white p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-medium text-[#6B7280]">{t.analytics_feedback_coverage}</p>
+                <div className="h-8 w-8 rounded-lg bg-[#EFF6FF] flex items-center justify-center">
+                  <Target className="h-4 w-4 text-[#3B82F6]" />
+                </div>
+              </div>
+              <p className="font-display text-3xl font-bold text-[#111827]">
+                {feedbackCoverage !== null ? `${feedbackCoverage}%` : '—'}
+              </p>
+              <p className="text-xs text-[#6B7280] mt-0.5">{feedbackCount} / {confirmed}</p>
+              <p className="text-xs text-[#9CA3AF] mt-1.5 leading-relaxed">{t.analytics_feedback_coverage_desc}</p>
+            </div>
+          </div>
         </div>
 
         {/* Occupancy bar */}

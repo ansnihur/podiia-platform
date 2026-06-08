@@ -226,8 +226,25 @@ export default function HomePage() {
             </div>
           )}
 
+          {/* Desktop stats — shown between subtitle and search on md+ screens */}
+          {!isMobile && (
+            <div className="flex justify-center gap-3 animate-fade-in-up" style={{ animationDelay: '0.45s' }}>
+              {[
+                { icon: CalendarDays, value: stats.eventsCount,       label: t.home_live_events    },
+                { icon: Users,        value: stats.usersCount,        label: t.home_members        },
+                { icon: TrendingUp,   value: stats.registrationsCount, label: t.home_registrations },
+              ].map(({ icon: Icon, value, label }) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', border: '1px solid #F3F4F6', borderRadius: 999, padding: '6px 16px' }}>
+                  <Icon style={{ width: 14, height: 14, color: '#FFD84D', flexShrink: 0 }} />
+                  <span style={{ fontWeight: 700, color: '#111827', fontSize: 13 }}>{value.toLocaleString()}</span>
+                  <span style={{ fontSize: 13, color: '#6B7280' }}>{label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Search */}
-          <div className="mx-auto w-full max-w-xl animate-fade-in-up" style={{ animationDelay: '0.45s' }}>
+          <div className="mx-auto w-full max-w-xl animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
             <form onSubmit={handleSearch}>
               <div className="relative flex items-center">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF] pointer-events-none" />

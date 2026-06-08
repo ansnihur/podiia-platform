@@ -201,6 +201,16 @@ export const translations = {
     analytics_date: 'Дата',
     analytics_no_regs: 'Реєстрацій ще немає',
     analytics_no_reviews: 'Відгуків ще немає',
+    analytics_advanced_metrics: 'Розширена аналітика',
+    analytics_cancellation_rate: 'Відмов від участі',
+    analytics_cancellation_rate_desc: 'Частка реєстрацій, що були скасовані учасниками',
+    analytics_weighted_rating: 'Зважений рейтинг',
+    analytics_weighted_rating_desc: 'Рейтинг зважений за кількістю відгуків — знижує вплив малої вибірки',
+    analytics_activity_index: 'Активність реєстрацій',
+    analytics_activity_index_desc: 'Середня кількість підтверджень на день від першої реєстрації до дати заходу',
+    analytics_feedback_coverage: 'Охоплення відгуками',
+    analytics_feedback_coverage_desc: 'Частка підтверджених учасників, що залишили відгук',
+    analytics_regs_per_day: 'реєстр./день',
 
     // Profile
     profile_title: 'Профіль',
@@ -513,6 +523,16 @@ export const translations = {
     analytics_date: 'Date',
     analytics_no_regs: 'No registrations yet',
     analytics_no_reviews: 'No reviews yet',
+    analytics_advanced_metrics: 'Advanced Analytics',
+    analytics_cancellation_rate: 'Cancellation Rate',
+    analytics_cancellation_rate_desc: 'Share of registrations cancelled by participants',
+    analytics_weighted_rating: 'Weighted Rating',
+    analytics_weighted_rating_desc: 'Rating adjusted for number of reviews — reduces the effect of small samples',
+    analytics_activity_index: 'Registration Activity',
+    analytics_activity_index_desc: 'Average confirmed registrations per day from first sign-up to event date',
+    analytics_feedback_coverage: 'Feedback Coverage',
+    analytics_feedback_coverage_desc: 'Share of confirmed participants who left a review',
+    analytics_regs_per_day: 'reg/day',
 
     // Profile
     profile_title: 'Profile',
