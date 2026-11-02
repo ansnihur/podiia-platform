@@ -3,3 +3,9 @@
 node_modules/
 .next/
 .claude/
+*.tsbuildinfo
+next-env.d.ts
+
+# local AI assistant notes
+CLAUDE.md
+CLAUDE.local.md
